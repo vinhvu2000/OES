@@ -48,6 +48,8 @@ if ($result->num_rows > 0) {
 } else {
     header("location:../?rp=0001");
 }
+$sql = addslashes($sql);
+$sql1 = addslashes($sql1);
 $sql2 = "INSERT INTO sql_log(thoigian,user,query,time) VALUES ('$now','$username','$sql','$time'),('$now','$username','$sql1','$time1');";
 if (mysqli_query($conn, $sql2)) {
     echo "New record created successfully";
