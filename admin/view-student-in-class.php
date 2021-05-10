@@ -17,9 +17,6 @@ if (isset($_GET['cid'])) {
     $sql = addslashes($sql);
     $sql2 = "insert into sql_log(thoigian,user,query,time) values ('$now','$username','$sql','$time');";
     if (mysqli_query($conn, $sql2)) {
-        echo "new record created successfully";
-    } else {
-        echo "error: " . $sql2 . "<br>" . mysqli_error($conn);
     }
     if ($result->num_rows > 0) {
         while ($row = $result->fetch_assoc()) {
@@ -238,9 +235,6 @@ fclose($open2);
 $sql = addslashes($sql);
 $sql2 = "insert into sql_log(thoigian,user,query,time) values ('$now','$username','$sql','$time');";
  if (mysqli_query($conn, $sql2)) {
-     echo "new record created successfully";
- } else {
-     echo "error: " . $sql2 . "<br>" . mysqli_error($conn);
  }
                                                         if ($result->num_rows > 0) {
                                                             print '
