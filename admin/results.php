@@ -196,7 +196,7 @@ fclose($open);
                                             include '../database/config.php';
                                             $username = isset($_SESSION['user'])?$_SESSION['user']:'Unknow';
 
-                                            $sql = "SELECT * FROM baikt INNER JOIN monhoc ON baikt.mamh = monhoc.mamh INNER JOIN (SELECT COUNT(*) as dat ,diem.mabkt FROM diem WHERE diem.trangthai ='PASS') as tg ON tg.mabkt = baikt.mabkt INNER JOIN (SELECT COUNT(*) as kdat ,diem.mabkt FROM diem WHERE diem.trangthai ='FAIL') as tg2 ON tg2.mabkt = baikt.mabkt";
+                                            $sql = "SELECT monhoc.tenmh, baikt.tenbkt, tg.dat,tg2.kdat FROM baikt INNER JOIN monhoc ON baikt.mamh = monhoc.mamh INNER JOIN (SELECT COUNT(*) as dat ,diem.mabkt FROM diem WHERE diem.trangthai ='PASS' GROUP BY diem.mabkt) as tg ON tg.mabkt = baikt.mabkt INNER JOIN (SELECT COUNT(*) as kdat ,diem.mabkt FROM diem WHERE diem.trangthai ='FAIL' GROUP BY diem.mabkt) as tg2 ON tg2.mabkt = baikt.mabkt";
                                             $time_start = microtime(true);
 $result = $conn->query($sql);
 $time_end = microtime(true);
