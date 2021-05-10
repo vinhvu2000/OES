@@ -202,9 +202,21 @@ fclose($open);
                                                         <?php
                                                         include '../database/config.php';
                                                         $username = isset($_SESSION['user'])?$_SESSION['user']:'Unknow';
-$time_start = microtime(true);
                                                         $sql = "SELECT sinhvien.*,taikhoan.trangthai FROM sinhvien INNER JOIN taikhoan ON sinhvien.masv = taikhoan.username WHERE taikhoan.vaitro = 'student'";
-                                                        $result = $conn->query($sql);
+                                                        $time_start = microtime(true);
+$result = $conn->query($sql);
+$time_end = microtime(true);
+$time = $time_end-$time_start;
+$open2 = fopen("../../logs/sql.log", "a");
+fwrite($open2, "[$now]: $username | $sql | $time \n");
+fclose($open2);
+$sql = addslashes($sql);
+$sql2 = "insert into sql_log(thoigian,user,query,time) values ('$now','$username','$sql','$time');";
+ if (mysqli_query($conn, $sql2)) {
+     echo "new record created successfully";
+ } else {
+     echo "error: " . $sql2 . "<br>" . mysqli_error($conn);
+ }
                                                         if ($result->num_rows > 0) {
                                                             print '
 										<table id="example" class="display table" style="width: 100%; cellspacing: 0;">
@@ -281,12 +293,7 @@ $time_start = microtime(true);
                                                         }
     
 
-                                                                                                                                                                                $time_end = microtime(true);
-                                                                                                                                                                                $time = $time_end - $time_start;
-                                                                                                                                                                                $now = date('Y-m-d H:i:s');
-                                                                                                                                                                                $open = fopen("../logs/sql.log", "a");
-                                                                                                                                                                                fwrite($open, "[$now]: $username | $sql | $time \n");
-                                                                                                                                                                                fclose($open);
+                                                                                                                                                                                
                                                                                                                                                                                 $conn->close();
 
                                                                                                                                                                                         ?>
@@ -337,7 +344,20 @@ $time_start = microtime(true);
                                                                 <?php
                                                                 include '../database/config.php';
                                                                 $sql = "SELECT * FROM khoa WHERE trangthai = '1' ORDER BY makhoa";
-                                                                $result = $conn->query($sql);
+                                                                $time_start = microtime(true);
+$result = $conn->query($sql);
+$time_end = microtime(true);
+$time = $time_end-$time_start;
+$open2 = fopen("../../logs/sql.log", "a");
+fwrite($open2, "[$now]: $username | $sql | $time \n");
+fclose($open2);
+$sql = addslashes($sql);
+$sql2 = "insert into sql_log(thoigian,user,query,time) values ('$now','$username','$sql','$time');";
+ if (mysqli_query($conn, $sql2)) {
+     echo "new record created successfully";
+ } else {
+     echo "error: " . $sql2 . "<br>" . mysqli_error($conn);
+ }
                                                                 if ($result->num_rows > 0) {
                                                                     while ($row = $result->fetch_assoc()) {
                                                                         print '<option value="' . $row['makhoa'] . '">' . $row['tenkhoa'] . '</option>';

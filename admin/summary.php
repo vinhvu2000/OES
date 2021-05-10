@@ -5,9 +5,21 @@ if (isset($_GET['eid'])) {
     include '../database/config.php';
     $exam_id = mysqli_real_escape_string($conn, $_GET['eid']);
     $username = isset($_SESSION['user'])?$_SESSION['user']:'Unknow';
-    $time_start = microtime(true);
     $sql = "SELECT * FROM tbl_examinations WHERE exam_id = '$exam_id'";
+    $time_start = microtime(true);
     $result = $conn->query($sql);
+    $time_end = microtime(true);
+    $time = $time_end-$time_start;
+    $open2 = fopen("../../logs/sql.log", "a");
+    fwrite($open2, "[$now]: $username | $sql | $time \n");
+    fclose($open2);
+    $sql = addslashes($sql);
+    $sql2 = "insert into sql_log(thoigian,user,query,time) values ('$now','$username','$sql','$time');";
+    if (mysqli_query($conn, $sql2)) {
+        echo "new record created successfully";
+    } else {
+        echo "error: " . $sql2 . "<br>" . mysqli_error($conn);
+    }
 
     if ($result->num_rows > 0) {
         while ($row = $result->fetch_assoc()) {
@@ -20,12 +32,6 @@ if (isset($_GET['eid'])) {
             $exreex = $row['re_exam'];
             $exterms = $row['terms'];
         }
-        $time_end = microtime(true);
-        $time = $time_end - $time_start;
-        $now = date('Y-m-d H:i:s');
-        $open = fopen("../logs/sql.log", "a");
-        fwrite($open, "[$now]: $username | $sql | $time \n");
-        fclose($open);
     } else {
         header("location:./");
     }
@@ -36,7 +42,20 @@ if (isset($_GET['eid'])) {
     $time_start = microtime(true);
     
     $sql = "SELECT * FROM tbl_assessment_records WHERE exam_id = '$exam_id'";
+    $time_start = microtime(true);
     $result = $conn->query($sql);
+    $time_end = microtime(true);
+    $time = $time_end-$time_start;
+    $open2 = fopen("../../logs/sql.log", "a");
+    fwrite($open2, "[$now]: $username | $sql | $time \n");
+    fclose($open2);
+    $sql = addslashes($sql);
+    $sql2 = "insert into sql_log(thoigian,user,query,time) values ('$now','$username','$sql','$time');";
+    if (mysqli_query($conn, $sql2)) {
+        echo "new record created successfully";
+    } else {
+        echo "error: " . $sql2 . "<br>" . mysqli_error($conn);
+    }
 
     if ($result->num_rows > 0) {
         while ($row = $result->fetch_assoc()) {

@@ -13,7 +13,9 @@ if ($code == $code2) {
             $sql = "UPDATE taikhoan INNER JOIN sinhvien ON taikhoan.username = sinhvien.masv SET password ='$password' WHERE email ='$myemail'";
         }
     }
-    if ($conn->query($sql) === TRUE) header("location:../index.php?rp=0005");
+    if ($conn->query($sql) === true) {
+        header("location:../index.php?rp=0005");
+    }
 } else {
     header("location:../forgot_pw.php?rp=0067");
 }

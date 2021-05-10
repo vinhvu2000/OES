@@ -195,10 +195,22 @@ fclose($open);
                                             <?php
                                             include '../database/config.php';
                                             $username = isset($_SESSION['user'])?$_SESSION['user']:'Unknow';
-$time_start = microtime(true);
 
                                             $sql = "SELECT * FROM baikt INNER JOIN monhoc ON baikt.mamh = monhoc.mamh INNER JOIN (SELECT COUNT(*) as dat ,diem.mabkt FROM diem WHERE diem.trangthai ='PASS') as tg ON tg.mabkt = baikt.mabkt INNER JOIN (SELECT COUNT(*) as kdat ,diem.mabkt FROM diem WHERE diem.trangthai ='FAIL') as tg2 ON tg2.mabkt = baikt.mabkt";
-                                            $result = $conn->query($sql);
+                                            $time_start = microtime(true);
+$result = $conn->query($sql);
+$time_end = microtime(true);
+$time = $time_end-$time_start;
+$open2 = fopen("../../logs/sql.log", "a");
+fwrite($open2, "[$now]: $username | $sql | $time \n");
+fclose($open2);
+$sql = addslashes($sql);
+$sql2 = "insert into sql_log(thoigian,user,query,time) values ('$now','$username','$sql','$time');";
+ if (mysqli_query($conn, $sql2)) {
+     echo "new record created successfully";
+ } else {
+     echo "error: " . $sql2 . "<br>" . mysqli_error($conn);
+ }
 
                                             if ($result->num_rows > 0) {
                                                 print '
@@ -251,12 +263,6 @@ $time_start = microtime(true);
                                         Không tìm thấy dữ liệu.
                                     </div>';
                                             }
-                                            $time_end = microtime(true);
-$time = $time_end - $time_start;
-$now = date('Y-m-d H:i:s');
-$open = fopen("../logs/sql.log", "a");
-fwrite($open, "[$now]: $username | $sql | $time \n");
-fclose($open);
                                             $conn->close();
 
                                             ?>

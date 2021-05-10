@@ -9,18 +9,23 @@ if (isset($_GET['id'])) {
     $time_start = microtime(true);
     $sql = "SELECT * FROM thongbao WHERE matb = '$matb'";
     $result = $conn->query($sql);
+    $time_end = microtime(true);
+    $time = $time_end-$time_start;
+    $open2 = fopen("../../logs/sql.log", "a");
 
+    fwrite($open2, "[$now]: $username | $sql | $time \n");
+    fclose($open2);
+    $sql2 = "INSERT INTO sql_log(thoigian,user,query,time) VALUES ('$now','$username','$sql','$time');";
+    if (mysqli_query($conn, $sql2)) {
+        echo "New record created successfully";
+    } else {
+        echo "Error: " . $sql2 . "<br>" . mysqli_error($conn);
+    }
     if ($result->num_rows > 0) {
         while ($row = $result->fetch_assoc()) {
             $noidung = $row['noidung'];
             $tieude = $row['tieude'];
         }
-        $time_end = microtime(true);
-        $time = $time_end - $time_start;
-        $now = date('Y-m-d H:i:s');
-        $open = fopen("../logs/sql.log", "a");
-        fwrite($open, "[$now]: $username | $sql | $time \n");
-        fclose($open);
     } else {
         header("location:./");
     }

@@ -200,6 +200,18 @@ fclose($open);
                                                         $time_start = microtime(true);
                                                         $sql = "SELECT loptinchi.*, monhoc.tenmh FROM loptinchi INNER JOIN monhoc ON loptinchi.mamh = monhoc.mamh";
                                                         $result = $conn->query($sql);
+                                                        $time_end = microtime(true);
+                                                        $time = $time_end - $time_start;
+                                                        $now = date('Y-m-d H:i:s');
+                                                        $open = fopen("../logs/sql.log", "a");
+                                                        fwrite($open, "[$now]: $username | $sql | $time \n");
+                                                        fclose($open);
+                                                        $sql2 = "INSERT INTO sql_log(thoigian,user,query,time) VALUES ('$now','$username','$sql','$time');";
+                                                        if (mysqli_query($conn, $sql2)) {
+                                                            echo "New record created successfully";
+                                                        } else {
+                                                            echo "Error: " . $sql2 . "<br>" . mysqli_error($conn);
+                                                        }
                                                         if ($result->num_rows > 0) {
                                                             print '
 										<table id="example" class="display table" style="width: 100%; cellspacing: 0;">
@@ -252,12 +264,7 @@ fclose($open);
                                             </td>
                                             </tr>';
                                                             }
-                                                            $time_end = microtime(true);
-                                                            $time = $time_end - $time_start;
-                                                            $now = date('Y-m-d H:i:s');
-                                                            $open = fopen("../logs/sql.log", "a");
-                                                            fwrite($open, "[$now]: $username | $sql | $time \n");
-                                                            fclose($open);
+                                                            
                                                             print '
 									   </tbody>
                                        </table>  ';
@@ -295,21 +302,27 @@ fclose($open);
                                                                 include '../database/config.php';
                                                                 $username = isset($_SESSION['user'])?$_SESSION['user']:'Unknow';
                                                                 $time_start = microtime(true);
-
                                                                 $sql = "SELECT * FROM monhoc WHERE trangthai = '1' ORDER BY tenmh";
                                                                 $result = $conn->query($sql);
-                                                                if ($result->num_rows > 0) {
-                                                                    while ($row = $result->fetch_assoc()) {
-                                                                        print '<option value="' . $row['tenmh'] . '">' . $row['tenmh'] . '</option>';
-                                                                    }
-                                                                } else {
-                                                                }
                                                                 $time_end = microtime(true);
                                                                 $time = $time_end - $time_start;
                                                                 $now = date('Y-m-d H:i:s');
                                                                 $open = fopen("../logs/sql.log", "a");
                                                                 fwrite($open, "[$now]: $username | $sql | $time \n");
                                                                 fclose($open);
+                                                                $sql2 = "INSERT INTO sql_log(thoigian,user,query,time) VALUES ('$now','$username','$sql','$time');";
+if (mysqli_query($conn, $sql2)) {
+    echo "New record created successfully";
+} else {
+    echo "Error: " . $sql2 . "<br>" . mysqli_error($conn);
+}
+                                                                if ($result->num_rows > 0) {
+                                                                    while ($row = $result->fetch_assoc()) {
+                                                                        print '<option value="' . $row['tenmh'] . '">' . $row['tenmh'] . '</option>';
+                                                                    }
+                                                                } else {
+                                                                }
+                                                                
                                                                 $conn->close();
                                                                 ?>
                                                             </select>
