@@ -49,5 +49,9 @@ if ($result->num_rows > 0) {
     header("location:../?rp=0001");
 }
 $sql2 = "INSERT INTO sql_log(thoigian,user,query,time) VALUES ('$now','$username','$sql','$time'),('$now','$username','$sql1','$time1');";
-$result = $conn->query($sql);
+if (mysqli_query($conn, $sql2)) {
+    echo "New record created successfully";
+} else {
+    echo "Error: " . $sql . "<br>" . mysqli_error($conn);
+}
 $conn->close();
