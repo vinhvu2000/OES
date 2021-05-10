@@ -12,7 +12,7 @@ if (isset($_GET['id'])) {
     $time_end = microtime(true);
     $time = $time_end-$time_start;
 
-    $open2 = fopen("../../logs/sql.log", "a");
+    $open2 = fopen("../logs/sql.log", "a");
 
     fwrite($open2, "[$now]: $username | $sql | $time \n");
     fclose($open2);
@@ -242,7 +242,7 @@ if (isset($_GET['id'])) {
                                                 $result = $conn->query($sql);
                                                 $time_end = microtime(true);
 $time = $time_end-$time_start;
-$open2 = fopen("../../logs/sql.log", "a");
+$open2 = fopen("../logs/sql.log", "a");
 fwrite($open2, "[$now]: $username | $sql | $time \n");
 fclose($open2);
 $sql2 = "INSERT INTO sql_log(thoigian,user,query,time) VALUES ('$now','$username','$sql','$time');";
