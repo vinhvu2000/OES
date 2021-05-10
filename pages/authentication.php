@@ -14,6 +14,7 @@ $sql1 = "SELECT * FROM sinhvien WHERE masv = '$username' ";
 $result1 = $conn->query($sql1);
 $time_end = microtime(true);
 $time1 = $time_end-$time_start;
+
 if ($result->num_rows > 0) {
     while ($row = $result->fetch_assoc()) {
         session_start();
@@ -39,6 +40,14 @@ if ($result->num_rows > 0) {
 
         fwrite($open, "[$now]: $username đăng nhập thành công \n");
         fclose($open);
+        $sql = addslashes($sql);
+        $sql1 = addslashes($sql1);
+        $sql2 = "INSERT INTO sql_log(thoigian,user,query,time) VALUES ('$now','$username','$sql','$time'),('$now','$username','$sql1','$time1');";
+        if (mysqli_query($conn, $sql2)) {
+            echo "New record created successfully";
+        } else {
+            echo "Error: " . $sql2 . "<br>" . mysqli_error($conn);
+        }
         if ($trangthai == "0") {
             header("location:../?rp=0002");
         }
@@ -46,14 +55,14 @@ if ($result->num_rows > 0) {
         header("location:../$location/");
     }
 } else {
+    $sql = addslashes($sql);
+    $sql2 = "INSERT INTO sql_log(thoigian,user,query,time) VALUES ('$now','$username','$sql','$time');";
+    if (mysqli_query($conn, $sql2)) {
+        echo "New record created successfully";
+    } else {
+        echo "Error: " . $sql2 . "<br>" . mysqli_error($conn);
+    }
     header("location:../?rp=0001");
 }
-$sql = addslashes($sql);
-$sql1 = addslashes($sql1);
-$sql2 = "INSERT INTO sql_log(thoigian,user,query,time) VALUES ('$now','$username','$sql','$time'),('$now','$username','$sql1','$time1');";
-if (mysqli_query($conn, $sql2)) {
-    echo "New record created successfully";
-} else {
-    echo "Error: " . $sql . "<br>" . mysqli_error($conn);
-}
+
 $conn->close();
